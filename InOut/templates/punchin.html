@@ -1,0 +1,24 @@
+{% comment %} {% for post in data%}
+    <h1>{{post}}</h1>
+{% endfor %} {% endcomment %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Softedge-PunchIn</title>
+    </head>
+    <body>
+        <h1>Punch In data</h1>
+        <ol>
+        {% for post in data%}
+            <li>
+                <ul>
+                    <li>UserId : {{post.userid}}</li>
+                    <li>Date   : {{post.dateuser}}</li>
+                    <li>time   : {{post.timestampin}}</li>
+                </ul>
+            </li>
+        {% endfor %}
+        </ol>
+    </body>
+</html>

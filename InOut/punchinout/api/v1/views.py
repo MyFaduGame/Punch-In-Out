@@ -5,6 +5,8 @@ from rest_framework import status
 from punchinout.api.v1.serializer import timeinserializer,timeoutserializer
 from punchinout.models import timein,timeout,User
 
+import requests
+from django.shortcuts import render
 
 
 def get_context(status, success, message, data):
@@ -37,6 +39,7 @@ class timeinview(APIView):
         serializer = timeinserializer(data=request.data)
         if serializer.is_valid():
             try:
+                
                 serializer.save()
                 context = get_context(
                         status=status.HTTP_200_OK,
@@ -73,7 +76,7 @@ class timeinview(APIView):
                         message=f'Time in of user {times.userid} ({times.firstname})',
                         data = serializer.data
                     )
-                return context
+                return Response(data=serializer.data)
             except:
                 context = get_context(
                         status=status.HTTP_200_OK,
@@ -81,7 +84,7 @@ class timeinview(APIView):
                         message=f'no data found of given userid {pk}',
                         data = 'none'
                     )
-                return context
+                return Response(data=serializer.errors)
         else:
             try:
                 times = timein.objects.all()
@@ -92,7 +95,7 @@ class timeinview(APIView):
                     message=f'Users time are',
                     data = serializer.data
                 )
-                return context
+                return Response(data=serializer.data)
             except:
                 return Response("Error happens")
         
@@ -159,3 +162,8 @@ class timeoutview(APIView):
                 return context
             except:
                 return Response("Error happens")
+
+def PunchInPage(request):
+    response = requests.get('http://127.0.0.1:8000/punchinout/timein/')
+    data = response.json()
+    return render(request,'punchin.html',{'data':data})
